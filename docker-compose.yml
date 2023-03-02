@@ -1,0 +1,61 @@
+version: "2.12"
+services:
+  #Middleware
+  middleware:
+    image: mbms-middleware
+    container_name: "mw"
+    #network_mode: "host"
+    privileged: true
+    ports:
+      - "3010"
+      - "2947"
+    networks:
+      public-net:
+        ipv4_address: 192.168.10.2    
+  
+  #Modem
+  modem:
+    image: modem
+    container_name: "modem"
+    #network_mode: "host"
+    devices: 
+      - "/dev/net/tun:/dev/net/tun"
+      - "/var/run/smcroute.sock:/var/run/smcroute.sock"
+    privileged: true
+    ports:
+      - "3010"
+      - "3020"
+      - "5520"
+    networks:
+      public-net:
+        ipv4_address: 192.168.10.3
+
+    volumes:
+      - "/home/ors/Downloads:/var/data"  
+    command: echo "------------------------------Hello--------------------------------------------"
+    #command: ["/usr/bin/modem", "-f", "/var/data/3MHz_MCS16_1kHz25_HLS_q6a.raw"]
+    #env_file:
+      
+
+  #Wui
+  wui:
+    image: wui
+    container_name: "wui"
+    #network_mode: "host"
+    privileged: true
+    ports:
+      - "3000:3000"
+      - "3020"
+      - "3010"
+    networks:
+      public-net:
+        ipv4_address: 192.168.10.4
+
+
+networks:
+  public-net:
+    name: obeca-net
+    ipam:
+      config:
+        - subnet: 192.168.10.1/24
+
