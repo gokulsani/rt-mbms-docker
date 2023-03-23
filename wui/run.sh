@@ -1,7 +1,7 @@
 #!/bin/bash
-docker stop wui && docker rm wui
+docker stop wuic && docker rm wuic
 docker run -it --rm \
     --privileged \
-    --name wui \
-    wui /bin/bash
-docker logs -f wui
+    --name wuic \
+    wuiimg
+docker logs -f wuic

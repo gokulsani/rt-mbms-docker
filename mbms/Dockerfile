@@ -27,30 +27,12 @@ WORKDIR /opt/build/rt-mbms-mw
 RUN git clone --recurse-submodules https://github.com/5G-MAG/rt-mbms-mw . && \
     git submodule update 
 RUN mkdir build && cd build && \
-#    cmake -DCMAKE_INSTALL_PREFIX=/opt/install -GNinja .. && \
     cmake -DCMAKE_INSTALL_PREFIX=/usr -GNinja .. && \
     ninja && sudo ninja install && \
     sudo ldconfig
-
-# Building as Release
-
-#FROM ubuntu:20.04 as RELEASE
-
-#RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
-#    libconfig++ \
-#    libfftw3-bin \
-#    libcpprest \
-#    libspdlog-dev \
-#    libtinyxml2-dev libtinyxml2-6a \
-#    libnl-3-200 \
-#    libgmime-3.0-0
-
-#COPY --from=BUILDER /opt/install /usr
-#COPY --from=BUILDER /etc/5gmag-rt.conf /etc
-#RUN ldd /usr/bin/mw
 RUN rm /etc/5gmag-rt.conf
 COPY 5gmag-rt.conf /etc/
 WORKDIR /
 EXPOSE 3020/udp 3020 80
-#ENTRYPOINT [ "/usr/bin/mw"]
-ENTRYPOINT [ "/usr/bin/mw", "--log-level=1" ]
+ENTRYPOINT [ "/usr/bin/mw"]
+

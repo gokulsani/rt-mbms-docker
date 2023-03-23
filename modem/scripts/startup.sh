@@ -18,8 +18,6 @@ if [ "$ENABLE_MCAST_ROUTING" = true ] ; then
   smcroutectl add $MODEM_TUN_INTERFACE 224.0.0.0/4 $MCAST_ROUTE_TARGET
 fi
 
-#echo "The start command is : ---------------------/usr/bin/modem --------------------------"
-#/bin/echo "Hallo"
-#/usr/bin/modem -f /var/data/3MHz_MCS16_1kHz25_RTP_3.5.raw
-#/usr/bin/modem -f /var/data/3MHz_MCS16_1kHz25_HLS_q6a.raw -b 3
-/usr/bin/modem 
+#------------------------Run the modem application -------------------------------
+
+/usr/bin/modem -f /var/data/3MHz_MCS16_1kHz25_HLS_q6a.raw -b 3

@@ -19,19 +19,12 @@ RUN apt-get update && \
 RUN sudo apt-get -y install cmake
 RUN sudo pip3 install cpplint && \
     sudo apt-get install -y npm nginx
-
 RUN mkdir -p /home/rt-wui
 WORKDIR /home/rt-wui/
 RUN git clone https://github.com/5G-MAG/rt-wui .
 RUN npm install && \
     npm audit fix
-
 RUN rm -rf app/controllers/api/*
 COPY middleware.js modem.js app/controllers/api/
-WORKDIR /etc/nginx/sites-enabled
-COPY 5gmag-rt-wui /etc/nginx/sites-available/
-RUN sudo ln -s ../sites-available/5gmag-rt-wui 5gmag-rt-wui && \
-    sudo rm default
 WORKDIR /home/rt-wui/
-EXPOSE 3000 3020 3010 3020/udp
 ENTRYPOINT [ "/usr/bin/node", "app.js" ]

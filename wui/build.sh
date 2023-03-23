@@ -1,2 +1,2 @@
 #!/bin/bash
-docker build . -t wui
+docker build . -t wuiimg

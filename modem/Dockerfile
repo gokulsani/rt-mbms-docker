@@ -1,12 +1,5 @@
 FROM ubuntu:20.04 as BUILDER
 WORKDIR /
-#ARG DEBIAN_FRONTEND=noninteractive
-#RUN  apt-get update && apt-get -y upgrade
-#RUN  apt-get -y install sudo
-#RUN  echo "------------apt utils installed-----------"
-#RUN  sudo apt-get -y install
-#RUN  sudo apt -y install snapd
-#RUN  systemctl enable snapd
 ###########################################################
 ## DEPENDENCIES
 ###########################################################
@@ -28,7 +21,6 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -y install \
 
 
 RUN  pip3 install cpplint
-#ADD  scripts/sdr.sh /home/scripts/sdr.sh
 RUN mkdir -p /opt/install
 
 ###########################################################
@@ -45,34 +37,17 @@ RUN mkdir buildir && cd buildir && \
     ninja && ninja install && \
     ldconfig
 
-
-###########################################################
-## USRP-UHD-SOAPYUHD
-###########################################################
-
-#Dependencies--------------
-
-
-
-
 ###########################################################
 ## RT-MBMS-MODEM
 ###########################################################
 RUN mkdir -p /opt/build/modem
 WORKDIR /opt/build/modem
-#RUN git clone --recurse-submodules https://github.com/5G-MAG/rt-mbms-modem.git . && git submodule update
 RUN git clone --recurse-submodules https://github.com/kuehnhammer/rt-mbms-modem.git . && git checkout development && git submodule update 
 RUN mkdir build && cd build && \
     cmake -DCMAKE_INSTALL_PREFIX=/opt/install -GNinja .. && \
     ninja && ninja install && \
     ldconfig
    
-
-###########################################################
-###########################################################
-###########################################################
-
-
 ###########################################################
 ## RELEASE
 ###########################################################
@@ -88,18 +63,13 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install \
     libgps26 \
     libsoapysdr-dev \
     soapysdr-tools \
-    #libsoapysdr0.7 \
     libmbedtls12 \
     libspdlog-dev \
     net-tools smcroute \
     soapysdr-module-bladerf \
     -y
 COPY --from=BUILDER /opt/install/ /usr
-#RUN cat /etc/5gmag-rt.conf
 COPY 5gmag-rt.conf /etc/
-#COPY dev-5gmag-rt.conf /etc/5gmag-rt.conf
-
-#COPY --from=BUILDER /etc/5gmag-rt.conf /etc
 RUN bladeRF-install-firmware
 RUN useradd 5gmag-rt
 
@@ -114,14 +84,9 @@ RUN openssl genrsa -des3 -passout pass:temporary -out key.pem 2048 && \
 # Automatically set up multicast packet routing from the tun interface to a network interface
 
 RUN ldd /usr/bin/modem
-#RUN cat /etc/5gmag-rt.conf
-
 COPY scripts/startup.sh /usr/bin/startup
 RUN chmod a+x /usr/bin/startup
 
 WORKDIR /
 EXPOSE 3010 5520 2947
 ENTRYPOINT [ "/usr/bin/startup" ]
-#CMD [ "/usr/bin/modem", "-f", "/var/data/3MHz_MCS16_1kHz25_RTP_3.5.raw" ]
-#CMD [ "/bin/echo", "Hey" ]
-#CMD [ "/bin/echo", "Hallo" ]

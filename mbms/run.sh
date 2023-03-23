@@ -1,7 +1,7 @@
 #!/bin/bash
-docker stop mbms-mw && docker rm mbms-mw
+docker stop mwc && docker rm mwc
 docker run -d \
-    --name mbms-mw \
+    --name mwc \
     --privileged \
-    mbms-middleware
-docker logs -f mbms-mw
+    mwimg
+docker logs -f mwc

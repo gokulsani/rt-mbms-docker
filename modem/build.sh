@@ -1,3 +1,2 @@
 #!/bin/bash
-
-docker build . -t modem
+docker build . -t modemimg

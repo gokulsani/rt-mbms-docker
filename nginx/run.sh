@@ -1,7 +1,7 @@
 #!/bin/bash
-docker stop nginx && docker rm nginx
+docker stop nginxc && docker rm nginxc
 docker run -d \
     --privileged \
-    --name nginx \
-    nginx
-docker logs -f nginx
+    --name nginxc \
+    nginximg
+docker logs -f nginxc
