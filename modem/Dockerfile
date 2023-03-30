@@ -82,7 +82,7 @@ RUN openssl genrsa -des3 -passout pass:temporary -out key.pem 2048 && \
 
 
 # Automatically set up multicast packet routing from the tun interface to a network interface
-
+# Have to to add some updates to the file
 RUN ldd /usr/bin/modem
 COPY scripts/startup.sh /usr/bin/startup
 RUN chmod a+x /usr/bin/startup
